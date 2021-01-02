@@ -46,3 +46,42 @@ trp.crop = function(l = 1, circle=TRUE){
   func %<>% setAttribute('tpt_mtd')
   return(func)
 }
+
+#' Tree points algorithm: auto segmentation.
+#' @description This function is meant to be used inside \code{\link{treePoints}}. Assign points to a nearest \code{TreeID} in \code{\link{treeMap}} coordinates.
+#' @export
+trp.autoseg = function(){
+  minfun <- function(x){
+    if(any(x < 1.797693e+308)){
+      return(which.min(x));
+    }else{
+      return(0);
+    }
+  }
+
+  func = function(las, xymap){
+    xymap[["Z"]]=0;
+    numoftrees = nrow(xymap);
+
+    xyz <- las@data[,.(X,Y,Z)];
+    xyz <- rbind(xymap[,c(2,3,4)], xyz);
+    nnself <- knn(data=xyz, k=5, radius=0.3);
+    edges <- data.frame(from_vertex=rep(1:nrow(nnself$nn.idx),4), to_vertex=as.vector(nnself$nn.idx[,2:5]),cost=as.vector(nnself$nn.dists[,2:5]))
+    non_directed<-makegraph(edges,directed=FALSE);
+
+    # simple = cpp_simplify(non_directed);
+    # origin <- unique(c(edges$from_vertex,edges$to_vertex));
+    # origin <- origin[-c(1:numoftrees)];
+    origin <- (numoftrees+1):nrow(nnself$nn.idx);
+    nodes <- 1:numoftrees;
+    non_dir_dist<-get_distance_matrix(Graph=non_directed, from=origin, to=nodes, allcores=TRUE);
+    IDs = apply(non_dir_dist, 1, minfun);
+    las@data$TreeID = IDs
+    las@data$TreeID[las@data$Classification == 2] = 0
+
+    las %<>% setAttribute('tree_points')
+    return(las)
+  }
+  func %<>% setAttribute('tpt_mtd')
+  return(func)
+}

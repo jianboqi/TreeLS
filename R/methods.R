@@ -1200,7 +1200,20 @@ tlsInventory = function(las, dh = 1.3, dw = 0.5, hp = 1, d_method = shapeFit(sha
   if(hasField(las, 'TreeID')){
     h = las@data[TreeID > 0, .(H = hfunc(Z, hp)), by='TreeID']
     d = dlas@data[,dfunc(X,Y,Z),by=TreeID]
+
+    minx = las@data[TreeID > 0, .(CrownX = hfunc(X, 0)), by='TreeID'];
+    maxx = las@data[TreeID > 0, .(CrownX = hfunc(X, 1)), by='TreeID'];
+    crown_x = maxx[,.(CrownX)]-minx[,.(CrownX)];
+    crown_x = cbind(maxx[,.(TreeID)],crown_x);
+
+    miny = las@data[TreeID > 0, .(CrownY = hfunc(Y, 0)), by='TreeID'];
+    maxy = las@data[TreeID > 0, .(CrownY = hfunc(Y, 1)), by='TreeID'];
+    crown_y = maxy[,.(CrownY)]-miny[,.(CrownY)];
+    crown_y = cbind(maxy[,.(TreeID)],crown_y);
+
     dh_tab = merge(d,h,by='TreeID')[order(TreeID)]
+    dh_tab = merge(dh_tab,crown_x,by='TreeID')[order(TreeID)]
+    dh_tab = merge(dh_tab,crown_y,by='TreeID')[order(TreeID)]
   } else {
     dh_tab = dlas@data %$% dfunc(X,Y,Z)
     dh_tab$H= hfunc(las$Z, hp)
