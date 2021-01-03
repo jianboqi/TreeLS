@@ -1201,13 +1201,14 @@ tlsInventory = function(las, dh = 1.3, dw = 0.5, hp = 1, d_method = shapeFit(sha
     h = las@data[TreeID > 0, .(H = hfunc(Z, hp)), by='TreeID']
     d = dlas@data[,dfunc(X,Y,Z),by=TreeID]
 
-    minx = las@data[TreeID > 0, .(CrownX = hfunc(X, 0)), by='TreeID'];
-    maxx = las@data[TreeID > 0, .(CrownX = hfunc(X, 1)), by='TreeID'];
+    minx = las@data[(TreeID > 0)&(Z>1), .(CrownX = hfunc(X, 0)), by='TreeID'];
+    maxx = las@data[(TreeID > 0)&(Z>1), .(CrownX = hfunc(X, 1)), by='TreeID'];
     crown_x = maxx[,.(CrownX)]-minx[,.(CrownX)];
     crown_x = cbind(maxx[,.(TreeID)],crown_x);
 
-    miny = las@data[TreeID > 0, .(CrownY = hfunc(Y, 0)), by='TreeID'];
-    maxy = las@data[TreeID > 0, .(CrownY = hfunc(Y, 1)), by='TreeID'];
+    # (TreeID > 0)&(Z>1) remove ground or grass points
+    miny = las@data[(TreeID > 0)&(Z>1), .(CrownY = hfunc(Y, 0)), by='TreeID'];
+    maxy = las@data[(TreeID > 0)&(Z>1), .(CrownY = hfunc(Y, 1)), by='TreeID'];
     crown_y = maxy[,.(CrownY)]-miny[,.(CrownY)];
     crown_y = cbind(maxy[,.(TreeID)],crown_y);
 
