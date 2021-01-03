@@ -62,11 +62,12 @@ trp.autoseg = function(){
   func = function(las, xymap){
     xymap[["Z"]]=0;
     numoftrees = nrow(xymap);
+    NN = 6;
 
     xyz <- las@data[,.(X,Y,Z)];
     xyz <- rbind(xymap[,c(2,3,4)], xyz);
-    nnself <- knn(data=xyz, k=5, radius=0.3);
-    edges <- data.frame(from_vertex=rep(1:nrow(nnself$nn.idx),4), to_vertex=as.vector(nnself$nn.idx[,2:5]),cost=as.vector(nnself$nn.dists[,2:5]))
+    nnself <- knn(data=xyz, k=NN, radius=0.3);
+    edges <- data.frame(from_vertex=rep(1:nrow(nnself$nn.idx),NN-1), to_vertex=as.vector(nnself$nn.idx[,2:NN]),cost=as.vector(nnself$nn.dists[,2:NN]))
     non_directed<-makegraph(edges,directed=FALSE);
 
     # simple = cpp_simplify(non_directed);
