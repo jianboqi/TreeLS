@@ -46,7 +46,7 @@ The parameters returned by the circle fit methods are:
 }
 
 \references{
-Liang, X. et al., 2012. Automatic stem mapping using single-scan terrestrial laser scanning. IEEE Transactions on Geoscience and Remote Sensing, 50(2), pp.661–670.
+
 
 Conto, T. et al., 2017. Performance of stem denoising and stem modelling algorithms on single tree point clouds from terrestrial laser scanning. Computers and Electronics in Agriculture, v. 143, p. 165-176.
 }

@@ -165,9 +165,9 @@ pars \%$\% points(X,Y,col='red', pch=3, cex=2)
 pars \%$\% lines(c(X,X+Radius),c(Y,Y), col='red',lwd=2,lty=2)
 }
 \references{
-Liang, X. et al., 2012. Automatic stem mapping using single-scan terrestrial laser scanning. IEEE Transactions on Geoscience and Remote Sensing, 50(2), pp.661–670.
 
-Olofsson, K., Holmgren, J. & Olsson, H., 2014. Tree stem and height measurements using terrestrial laser scanning and the RANSAC algorithm. Remote Sensing, 6(5), pp.4323–4344.
+
+
 
 Conto, T. et al., 2017. Performance of stem denoising and stem modelling algorithms on single tree point clouds from terrestrial laser scanning. Computers and Electronics in Agriculture, v. 143, p. 165-176.
 }
