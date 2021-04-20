@@ -527,16 +527,16 @@ tlsCrop = function(las, x, y, len, circle=TRUE, negative=FALSE){
 #' rgl::axes3d(col='white')
 #' @importFrom raster raster extent res<-
 #' @export
-tlsNormalize = function(las, min_res=.25, keep_ground=TRUE){
+tlsNormalize = function(las, min_res=.25, keep_ground=TRUE, force_ground_filtering=FALSE){
 
   isLAS(las)
 
   if(min_res <= 0)
     stop('res must be a positive number')
 
-  if(!any(las$Classification == 2)){
+  if(!any(las$Classification == 2) || force_ground_filtering){
     message('no ground points found, performing ground segmentation')
-    las = classify_ground(las, csf(class_threshold = 0.05, cloth_resolution = 0.05), last_returns = F)
+    las = classify_ground(las, csf(class_threshold = 0.5, cloth_resolution = 0.05), last_returns = F)
   }
 
   res = area(las) / nrow(las@data[Classification == 2])

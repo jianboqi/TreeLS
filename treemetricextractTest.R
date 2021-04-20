@@ -2,17 +2,18 @@ library(TreeLS)
 
 # open sample plot file
 # file = system.file("extdata", "pine_plot.laz", package="TreeLS")
-file = 'D:/DatasetDir/ZCZW/MobileLiDAR/dual_scanners_sub.las'
+# file = 'D:/DatasetDir/ZCZW/MobileLiDAR/dual_scanners_sub.las'
+file = 'D:/DatasetDir/ZCZW/广西数据/bls_uav_top.las'
 tls = readTLS(file)
 
 # normalize the point cloud
-tls = tlsNormalize(tls, keep_ground = TRUE)
-#x = plot(tls) # colorPalette="White"
+tls = tlsNormalize(tls, keep_ground = TRUE, force_ground_filtering=TRUE)
+x = plot(tls) # colorPalette="White"
 
 # extract the tree map from a thinned point cloud
 thin = tlsSample(tls, smp.voxelize(0.01))
 map = treeMap(thin, map.hough(min_density = 0.03), 0)
-x = plot(map, size=2)
+# x = plot(map, size=2)
 add_treeMap(x, map, color='yellow', size=2)
 
 # classify tree regions
